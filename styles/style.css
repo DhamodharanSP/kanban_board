@@ -1,0 +1,88 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.kanban-board {
+    min-height: 90vh;
+    min-width: 80vw;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: flex-start;
+    background-color: #ddd;
+    border-radius: 2rem;
+    padding: 2rem;
+    margin: 5rem;
+    
+}
+
+/* Column */
+
+.column {
+    min-height: 70vh;
+    min-width: 200px;
+    background-color: #fff;
+    padding-bottom: 1rem;
+
+}
+
+.column-title {
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.green {
+    background-color: green;
+}
+
+.blue {
+    background-color: steelblue;
+}
+
+.orange {
+    background-color: orange;
+}
+
+/* Task container */
+.task-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.task-card {
+    width: 70%;
+    min-height: 8rem;
+    background-color: #fff;
+    margin: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 5px rgba(0,0,0, .4);
+}
+
+.task-header {
+    height: 2rem;
+    border-radius: 1rem 1rem 0 0;
+}
+
+/* Draggable */
+
+.dragging {
+    opacity: 0.5;
+}
+
+.drag-over {
+    border: 2px dashed #000;
+}
