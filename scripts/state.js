@@ -54,12 +54,12 @@ export const state = {
     columnOrder: ['requested', 'in_progress', 'done']
 };
 
-export function setState(updates)
-{
-    Object.assign(state, updates);
-}
-
 export function getTask(taskId)
 {
-    return state.tasks[taskId];
+    const task = state.tasks[taskId];
+    if(!task) {
+        console.log(`Task not found: ${task}`);
+        return null;
+    }
+    return task;
 }
