@@ -30,13 +30,14 @@ function generateColumns()
 function generateTasks(column)
 {
     const { taskIds, colorTheme } = column;
-    return taskIds.map(taskId => {
-        const task = getTask(taskId);
-        return `
-            <div class="task-card" data-task-id="${task.id}" draggable="true">
-                <div class="task-header ${colorTheme}">${task.title}</div>
-            </div>
-        `;
-    }).join('');
+    return taskIds.map(taskId => getTask(taskId)).map(task => renderTasks(task, colorTheme)).join('');
 }
 
+function renderTasks(task, colorTheme)
+{
+    return `
+        <div class="task-card" data-task-id="${task.id}" draggable="true">
+            <div class="task-header ${colorTheme}">${task.title}</div>
+        </div>
+    `;
+}
