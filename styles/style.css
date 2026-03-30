@@ -41,6 +41,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .green {
@@ -64,18 +65,27 @@ body {
 }
 
 .task-card {
-    width: 70%;
+    min-width: 8rem;
+    max-width: 8rem;
     min-height: 8rem;
     background-color: #fff;
     margin: 1rem;
     border-radius: 1rem;
     box-shadow: 0 0 5px rgba(0,0,0, .4);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .task-header {
     min-height: 2rem;
     border-radius: 1rem 1rem 0 0;
     padding: .5rem;
+}
+
+.task-description {
+    text-align: justify;
+    flex: 1
 }
 
 /* Draggable */
@@ -86,4 +96,42 @@ body {
 
 .drag-over {
     border: 2px dashed #000;
+}
+
+/* Add button */
+.add-task-btn {
+    font-size: 2rem;
+    font-weight: bold;
+    position: absolute;
+    right: 1rem;
+    transition: all .3s;
+    cursor: pointer;
+}
+
+.add-task-btn:hover {
+    transform: scale(1.3);
+}
+
+/* Draft task */
+.task-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.clear-task, .save-task {
+    border: none;
+    color: white;
+    padding: .4rem .8rem;
+    cursor: pointer;
+}
+
+.save-task {
+    background-color: green;
+    border-radius: 1rem 0 1rem 0;
+}
+
+.clear-task {
+    background-color: red;
+    border-radius: 0 1rem 0 1rem;
 }

@@ -29,7 +29,7 @@ export const state = {
             title: 'Deployment'
         },
     },
-
+    
     columns: {
         requested: {
             id: 'requested',
@@ -62,4 +62,9 @@ export function getTask(taskId)
         return null;
     }
     return task;
+}
+
+export function addTask(task)
+{
+    state.tasks[task.id] = task;
 }
