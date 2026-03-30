@@ -1,4 +1,4 @@
-import { state, getTask, addTask } from "./state.js";
+import { state, getTask, addTask, updateColumn, setDraftTask, clearDraftTask } from "./state.js";
 
 const kanbanBoard = document.querySelector('.js-kanban-board');
 
@@ -75,7 +75,7 @@ kanbanBoard.addEventListener('click', (event) => {
         renderTable();
     }
     else if(saveButton) {
-        saveDraftTask();
+        saveDraftTask(saveButton);
         renderTable();
     }
     else if(clearButton) {
@@ -87,17 +87,17 @@ kanbanBoard.addEventListener('click', (event) => {
 function addDraftTask(column)
 {
     const { columnId } = column.dataset;
-    state.draftTask = {
-        columnId,
-        title: ''
-    };
+    setDraftTask(columnId);
 }
 
-function saveDraftTask()
-{    
-    const draftInput = document.querySelector('.js-draft-task-input');
+function saveDraftTask(saveButton)
+{   
+    const draftTaskCard = saveButton.closest('.js-draft-task');
+    const draftInput = draftTaskCard.querySelector('.js-draft-task-input');
+
     const draftValue = draftInput.value;
-    
+    if(!draftValue.trim()) return;
+
     const newTaskId = crypto.randomUUID();
 
     const newTask = {
@@ -110,12 +110,12 @@ function saveDraftTask()
     const { draftTask } = state;
     const column = state.columns[draftTask.columnId];
 
-    column.taskIds.push(newTaskId);
+    updateColumn(column, newTaskId);
 
     removeDraftTask();
 }
 
 function removeDraftTask()
 {
-    delete state.draftTask;
+    clearDraftTask();
 }

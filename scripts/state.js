@@ -1,58 +1,34 @@
 export const state = {
-    tasks: {
-        task1: {
-            id: 'task1',
-            title: 'Add button'
-        },
-        task2: {
-            id: 'task2',
-            title: 'Enhance UI'
-        }, 
-        task3: {
-            id: 'task3',
-            title: 'Test the frontend'
-        },
-        task4: {
-            id: 'task4',
-            title: 'Toggle animation theme'
-        },
-        task5: {
-            id: 'task5',
-            title: 'Train ML model'
-        },
-        task6: {
-            id: 'task6',
-            title: 'Multi-service architecture'
-        },
-        task7: {
-            id: 'task7',
-            title: 'Deployment'
-        },
-    },
+    tasks: initTasks(),
     
     columns: {
-        requested: {
-            id: 'requested',
-            title: 'REQUESTED',
-            taskIds: ['task1', 'task5', 'task6'],
-            colorTheme: 'blue'
-        },
-        in_progress: {
-            id: 'in_progress',
-            title: 'IN PROGRESS',
-            taskIds: ['task3', 'task7'],
-            colorTheme: 'orange'
-        },
-        done: {
-            id: 'done',
-            title: 'DONE',
-            taskIds: ['task2','task4'],
-            colorTheme: 'green'
-        }
+        requested: createColumn('requested', 'REQUESTED', 'blue'),
+        in_progress: createColumn('in_progress', 'IN PROGRESS', 'orange'),
+        done: createColumn('done', 'DONE', 'green')
     },
 
     columnOrder: ['requested', 'in_progress', 'done']
 };
+
+function initTasks()
+{
+    return JSON.parse(localStorage.getItem('tasks')) || {};
+}
+
+function saveTasksOnLocal()
+{
+    localStorage.setItem('tasks', JSON.stringify(state.tasks));
+}
+
+function initTasksInColumn(columnId)
+{
+    return JSON.parse(localStorage.getItem(columnId)) || [];
+}
+
+function saveTasksInColumnOnLocal(columnId)
+{
+    localStorage.setItem(columnId, JSON.stringify(state.columns[columnId].taskIds));
+}
 
 export function getTask(taskId)
 {
@@ -64,7 +40,39 @@ export function getTask(taskId)
     return task;
 }
 
+// Draft task
+export function setDraftTask(columnId)
+{
+    state.draftTask = {
+        columnId,
+        title: ''
+    };
+}
+
+export function clearDraftTask()
+{
+    delete state.draftTask;
+}
+
 export function addTask(task)
 {
     state.tasks[task.id] = task;
+    saveTasksOnLocal();
+}
+
+export function updateColumn(column, taskId)
+{
+    column.taskIds.push(taskId);
+    saveTasksInColumnOnLocal(column.id);
+}
+
+// Creating columns
+function createColumn(id, title, colorTheme)
+{
+    return {
+        id,
+        title,
+        taskIds: initTasksInColumn(id),
+        colorTheme
+    };
 }
