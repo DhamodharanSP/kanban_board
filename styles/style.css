@@ -135,3 +135,18 @@ body {
     background-color: red;
     border-radius: 0 1rem 0 1rem;
 }
+
+/* Task level delete */
+
+.delete-task {
+    color: red;
+    align-self: flex-end;
+    padding: .3rem .5rem;
+    border-radius: 2rem;
+    transition: all .4s;
+}
+
+.delete-task:hover {
+    color: white;
+    background-color: red;
+}

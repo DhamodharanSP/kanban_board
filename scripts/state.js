@@ -60,7 +60,7 @@ export function addTask(task)
     saveTasksOnLocal();
 }
 
-export function updateColumn(column, taskId)
+export function saveTaskInColumn(column, taskId)
 {
     column.taskIds.push(taskId);
     saveTasksInColumnOnLocal(column.id);
@@ -75,4 +75,24 @@ function createColumn(id, title, colorTheme)
         taskIds: initTasksInColumn(id),
         colorTheme
     };
+}
+
+// Deleting tasks
+function deleteTask(taskId)
+{
+    delete state.tasks[taskId];
+    saveTasksOnLocal();
+}
+
+function deleteTaskInColumn(columnId, taskId)
+{
+    const column = state.columns[columnId];
+    column.taskIds = column.taskIds.filter(id => id !== taskId);
+    saveTasksInColumnOnLocal(column.id);
+}
+
+export function clearTask(columnId, taskId)
+{
+    deleteTask(taskId);
+    deleteTaskInColumn(columnId, taskId);
 }
