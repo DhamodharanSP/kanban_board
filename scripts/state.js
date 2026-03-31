@@ -60,10 +60,16 @@ export function addTask(task)
     saveTasksOnLocal();
 }
 
-export function saveTaskInColumn(column, taskId)
+function getColumn(columnId)
 {
+    return state.columns[columnId];
+}
+
+export function saveTaskInColumn(columnId, taskId)
+{
+    const column = getColumn(columnId);
     column.taskIds.push(taskId);
-    saveTasksInColumnOnLocal(column.id);
+    saveTasksInColumnOnLocal(columnId);
 }
 
 // Creating columns
@@ -86,13 +92,36 @@ function deleteTask(taskId)
 
 function deleteTaskInColumn(columnId, taskId)
 {
-    const column = state.columns[columnId];
+    const column = getColumn(columnId);
     column.taskIds = column.taskIds.filter(id => id !== taskId);
-    saveTasksInColumnOnLocal(column.id);
+    saveTasksInColumnOnLocal(columnId);
 }
 
 export function clearTask(columnId, taskId)
 {
     deleteTask(taskId);
     deleteTaskInColumn(columnId, taskId);
+}
+
+// Draggable
+export function setDragState(taskId, sourceColumnId)
+{
+    state.dragState = {
+        taskId,
+        sourceColumnId
+    };
+}
+
+export function clearDragState()
+{
+    delete state.dragState;
+}
+
+export function updateColumnsOnSuccessfulDrag(targetColumnId)
+{
+    const { taskId, sourceColumnId } = state?.dragState;
+    if(!sourceColumnId) return;
+
+    deleteTaskInColumn(sourceColumnId, taskId);
+    saveTaskInColumn(targetColumnId, taskId);
 }

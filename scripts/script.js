@@ -1,4 +1,4 @@
-import { state, getTask, addTask, saveTaskInColumn, setDraftTask, clearDraftTask, clearTask } from "./state.js";
+import { state, getTask, addTask, saveTaskInColumn, setDraftTask, clearDraftTask, clearTask, setDragState, clearDragState, updateColumnsOnSuccessfulDrag } from "./state.js";
 
 const kanbanBoard = document.querySelector('.js-kanban-board');
 
@@ -117,9 +117,9 @@ function saveDraftTask(saveButton)
     addTask(newTask);
 
     const { draftTask } = state;
-    const column = state.columns[draftTask.columnId];
+    const { columnId } = draftTask;
 
-    saveTaskInColumn(column, newTaskId);
+    saveTaskInColumn(columnId, newTaskId);
 
     removeDraftTask();
 }
@@ -140,3 +140,31 @@ function removeTask(deleteButton)
 
     clearTask(columnId, taskId);
 }
+
+// Draggable
+document.addEventListener('dragstart', (event) => {
+    const { target } = event;
+    const { taskId } = target.dataset;
+
+    const column = target.closest('.js-task-container');
+    const { columnId } = column.dataset;
+    setDragState(taskId, columnId);
+});
+
+document.addEventListener('dragover', (event) => {
+    const { target } = event;
+    const dropColumn = target.closest('.js-task-container');
+    if(!dropColumn) return;
+    event.preventDefault();
+});
+
+document.addEventListener('drop', (event) => {
+    const { target } = event;
+    const dropColumn = target.closest('.js-task-container');
+    if(!dropColumn) return;
+
+    const { columnId } = dropColumn.dataset;
+    updateColumnsOnSuccessfulDrag(columnId);
+    clearDragState();
+    renderTable();
+});
