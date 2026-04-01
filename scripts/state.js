@@ -1,40 +1,44 @@
-export const state = {
-    tasks: initTasks(),
-    
-    columns: {
-        requested: createColumn('requested', 'REQUESTED', 'blue'),
-        in_progress: createColumn('in_progress', 'IN PROGRESS', 'orange'),
-        done: createColumn('done', 'DONE', 'green')
-    },
+export const state = loadState();
 
-    columnOrder: ['requested', 'in_progress', 'done']
-};
-
-function initTasks()
+function loadState()
 {
-    return JSON.parse(localStorage.getItem('tasks')) || {};
+    const savedState = JSON.parse(localStorage.getItem('kanbanState'));
+
+    if(savedState) {
+        delete savedState.dragState;
+        delete savedState.draftTask;
+        return savedState;
+    }
+
+    return {
+        tasks: {},
+        
+        columns: {
+            requested: createColumn('requested', 'REQUESTED', 'blue'),
+            in_progress: createColumn('in_progress', 'IN PROGRESS', 'orange'),
+            done: createColumn('done', 'DONE', 'green')
+        },
+
+        columnOrder: ['requested', 'in_progress', 'done']
+    };
 }
 
-function saveTasksOnLocal()
+function saveState()
 {
-    localStorage.setItem('tasks', JSON.stringify(state.tasks));
-}
-
-function initTasksInColumn(columnId)
-{
-    return JSON.parse(localStorage.getItem(columnId)) || [];
-}
-
-function saveTasksInColumnOnLocal(columnId)
-{
-    localStorage.setItem(columnId, JSON.stringify(state.columns[columnId].taskIds));
+    const { tasks, columns, columnOrder } = state;
+    const persistentState = {
+        tasks,
+        columns,
+        columnOrder
+    };
+    localStorage.setItem('kanbanState', JSON.stringify(persistentState));
 }
 
 export function getTask(taskId)
 {
     const task = state.tasks[taskId];
     if(!task) {
-        console.log(`Task not found: ${task}`);
+        console.log(`Task not found: ${taskId}`);
         return null;
     }
     return task;
@@ -57,7 +61,7 @@ export function clearDraftTask()
 export function addTask(task)
 {
     state.tasks[task.id] = task;
-    saveTasksOnLocal();
+    saveState();
 }
 
 function getColumn(columnId)
@@ -69,7 +73,7 @@ export function saveTaskInColumn(columnId, taskId)
 {
     const column = getColumn(columnId);
     column.taskIds.push(taskId);
-    saveTasksInColumnOnLocal(columnId);
+    saveState();
 }
 
 // Creating columns
@@ -78,7 +82,7 @@ function createColumn(id, title, colorTheme)
     return {
         id,
         title,
-        taskIds: initTasksInColumn(id),
+        taskIds: [],
         colorTheme
     };
 }
@@ -87,14 +91,14 @@ function createColumn(id, title, colorTheme)
 function deleteTask(taskId)
 {
     delete state.tasks[taskId];
-    saveTasksOnLocal();
+    saveState();
 }
 
 function deleteTaskInColumn(columnId, taskId)
 {
     const column = getColumn(columnId);
     column.taskIds = column.taskIds.filter(id => id !== taskId);
-    saveTasksInColumnOnLocal(columnId);
+    saveState();
 }
 
 export function clearTask(columnId, taskId)
