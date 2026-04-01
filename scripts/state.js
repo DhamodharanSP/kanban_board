@@ -123,8 +123,10 @@ export function clearDragState()
 
 export function updateColumnsOnSuccessfulDrag(targetColumnId)
 {
-    const { taskId, sourceColumnId } = state?.dragState;
-    if(!sourceColumnId) return;
+    const { dragState } = state;
+    if(!dragState) return;
+    
+    const { taskId, sourceColumnId } = state.dragState;
 
     deleteTaskInColumn(sourceColumnId, taskId);
     saveTaskInColumn(targetColumnId, taskId);
