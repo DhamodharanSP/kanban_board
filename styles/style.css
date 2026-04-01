@@ -26,13 +26,12 @@ body {
 }
 
 /* Column */
-
 .column {
     min-height: 70vh;
     min-width: 200px;
     background-color: #fff;
     padding-bottom: 1rem;
-
+    margin: 1rem;
 }
 
 .column-title {
@@ -90,7 +89,6 @@ body {
 }
 
 /* Draggable */
-
 .dragging {
     opacity: 0.5;
 }
@@ -138,7 +136,6 @@ body {
 }
 
 /* Task level delete */
-
 .delete-task {
     color: red;
     align-self: flex-end;
